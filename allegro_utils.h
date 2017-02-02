@@ -29,5 +29,7 @@ void read_cimage_arrayf(const char *fname, Eigen::ArrayXXf &R,
                         Eigen::ArrayXXf &G,
                         Eigen::ArrayXXf &B);
 
+void read_gimage_arrayf(const char *fname, Eigen::ArrayXXf &G);
+
 
 #endif //ALLEGRO_TEST_ALLEGRO_UTILS_H

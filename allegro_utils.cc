@@ -77,6 +77,37 @@ void get_rgb_arraysf(ALLEGRO_BITMAP *bitmap, Eigen::ArrayXXf& R,
   al_destroy_bitmap(mem_bitmap);
 }
 
+void get_grey_arraysf(ALLEGRO_BITMAP *bitmap, Eigen::ArrayXXf& G)
+{
+  const int M = al_get_bitmap_height(bitmap);
+  const int N = al_get_bitmap_width(bitmap);
+  ALLEGRO_BITMAP *current_bitmap, *mem_bitmap;
+  current_bitmap = al_get_target_bitmap();
+
+
+  int flags = al_get_new_bitmap_flags();
+  al_set_new_bitmap_flags(ALLEGRO_MEMORY_BITMAP | ALLEGRO_MIN_LINEAR);
+  mem_bitmap = al_clone_bitmap(bitmap);
+
+  al_lock_bitmap(mem_bitmap, ALLEGRO_PIXEL_FORMAT_ANY, ALLEGRO_LOCK_READONLY);
+  al_set_target_bitmap(mem_bitmap);
+
+  ALLEGRO_COLOR color;
+  G.resize(M,N);
+  float r,g,b;
+  for(int n = 0; n<N; n++)
+    for(int m = 0; m<M; m++){
+      color = al_get_pixel(mem_bitmap, n, m);
+      al_unmap_rgb_f(color, &r, &g, &b);
+      G(m,n) = 0.2989*r + 0.5870*g + 0.1140*b;
+    }
+
+  al_unlock_bitmap(mem_bitmap);
+  al_set_target_bitmap(current_bitmap);
+  al_set_new_bitmap_flags(flags);
+  al_destroy_bitmap(mem_bitmap);
+}
+
 void create_cbitmap_from_arraysf(const Eigen::ArrayXXf &R,
                                  const Eigen::ArrayXXf &G,
                                  const Eigen::ArrayXXf &B,
@@ -115,6 +146,17 @@ void read_cimage_arrayf(const char *fname, Eigen::ArrayXXf &R,
   image = al_load_bitmap(fname);
 
   get_rgb_arraysf(image, R, G, B);
+
+  al_destroy_bitmap(image);
+}
+
+void read_gimage_arrayf(const char *fname, Eigen::ArrayXXf &G)
+{
+  ALLEGRO_BITMAP* image;
+
+  image = al_load_bitmap(fname);
+
+  get_grey_arraysf(image, G);
 
   al_destroy_bitmap(image);
 }

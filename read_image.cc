@@ -16,13 +16,13 @@ int main() {
   ALLEGRO_BITMAP* image=NULL;
 
   ArrayXXf Ir, Ig, Ib;
-  read_cimage_arrayf("./data/foto01.jpg", Ir, Ig, Ib);
+  read_gimage_arrayf("./data/foto01.jpg", Ig);
 
 
 
-  display = al_create_display(Ir.cols(), Ir.rows());
-  create_cbitmap_from_arraysf(Ir, Ig, Ib, &image);
-  al_draw_bitmap(image, 0, 0, ALLEGRO_FLIP_HORIZONTAL);
+  display = al_create_display(Ig.cols(), Ig.rows());
+  create_gbitmap_from_arrayf(Ig, &image);
+  al_draw_bitmap(image, 0, 0, 0);
   al_flip_display();
 
   al_rest(2);
